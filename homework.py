@@ -3,19 +3,17 @@ print('_____________________________')
 class Calculator:
     def __init__(self, limit):
         self.limit = limit
-
-    date_format = '%d.%m.%Y'
-    records = []
+        self.records = []
+    
 
     def add_record(self, some_record):
-        some_record.date = dt.datetime.strptime(some_record.date, self.date_format)
+        # some_record.date = dt.datetime.strptime(some_record.date, self.date_format)
         self.records.append(some_record)
 
     def get_today_stats(self):
         stats = 0
         now_date = dt.datetime.now()
         for item in self.records:
-            # print(item.date.date())
             if item.date.date() == now_date.date():
                 stats = stats + item.amount
         return stats
@@ -24,8 +22,10 @@ class Calculator:
         stats = 0     
         now_date = dt.datetime.now()
         last_week = dt.datetime.now() - dt.timedelta(days=7)
+     
         for item in self.records:
-            if item.date.date() <= last_week.date():
+    
+            if item.date.date() >= last_week.date():
                 stats = stats + item.amount
         return stats
 
@@ -35,29 +35,31 @@ class CashCalculator(Calculator):
         super().__init__(limit)
         
 
-    USD_RATE = 76.9
-    EURO_RATE = 92.8
+    USD_RATE = 76.94
+    EURO_RATE = 92.82
     
 
     def get_today_cash_remained(self, currency):
         today_stats = cash_сalculator.get_today_stats()
         limit_money = self.limit
-        
+
         if currency == 'usd':
+           currency = 'USD'
            limit_money = self.limit / CashCalculator.USD_RATE
            today_stats = today_stats / CashCalculator.USD_RATE
- 
         if currency == 'eur':
+           currency = 'Euro' 
            limit_money = self.limit / CashCalculator.EURO_RATE
            today_stats = today_stats / CashCalculator.EURO_RATE
-        
+        if currency == 'rub':
+            currency = 'руб'
+
         if today_stats == limit_money:
             return 'Денег нет, держись'
         if today_stats < limit_money:
-            return round(limit_money - today_stats, 2)
-            
+            return f'На сегодня осталось {round(limit_money - today_stats, 2)} {currency}'
         if today_stats > limit_money:
-            print(f'Денег нет, держись: твой долг - {round(today_stats - limit_money, 2)} {currency}.')
+            return f'Денег нет, держись: твой долг - {round(limit_money - today_stats, 2)} {currency}'
 
     
 class CaloriesCalculator(Calculator):
@@ -78,17 +80,17 @@ class Record:
         self.amount = amount
         self.comment = comment
         if date:
-            self.date = date
+            self.date = dt.datetime.strptime(date, '%d.%m.%Y')
         else: 
-            self.date = dt.datetime.now()
+             self.date = dt.datetime.now()
 
 
 # для CashCalculator 
-r1 = Record(amount=145, comment="Безудержный шопинг", date="02.02.2021")
-r2 = Record(amount=1568, comment="Наполнение потребительской корзины", date="09.03.2019")
-r3 = Record(amount=691, comment="Катание на такси", date="29.01.2021")
+r1 = Record(amount=200, comment="Безудержный шопинг", date="02.02.2021")
+r2 = Record(amount=1500, comment="Наполнение потребительской корзины", date="09.03.2019")
+r3 = Record(amount=600, comment="Катание на такси", date="29.01.2021")
 r4 = Record(amount=200, comment="К чаю", date="02.02.2021")
-r5 = Record(amount=390, comment="Транспорт", date="02.02.2021")
+r5 = Record(amount=300, comment="Транспорт", date="02.02.2021")
 
 # для CaloriesCalculator
 r6 = Record(amount=1186, comment="Кусок тортика. И ещё один.", date="24.02.2019")
@@ -108,12 +110,11 @@ calories_calculator.add_record(r8)
 
 print(calories_calculator.get_calories_remained())
 
-# print('На сегодня осталось ' + str(cash_сalculator.get_today_cash_remained('rub')) + ' руб.')
-# print('На сегодня осталось ' + str(cash_сalculator.get_today_cash_remained('usd')) + '$.')
-# print('На сегодня осталось ' + str(cash_сalculator.get_today_cash_remained('eur')) + ' EUR.')
+print(cash_сalculator.get_today_cash_remained('rub'))
+print(cash_сalculator.get_today_cash_remained('usd'))
+print(cash_сalculator.get_today_cash_remained('eur'))
+
 
 print(f'На сегодня потрачено {cash_сalculator.get_today_stats()} руб.')
 print(cash_сalculator.get_week_stats())
-
-print(len(cash_сalculator.records))
-print(len(calories_calculator.records))
+print(cash_сalculator.get_today_stats())
