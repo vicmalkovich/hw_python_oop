@@ -13,6 +13,7 @@ class Calculator:
     def get_today_stats(self):
         stats = 0
         now_date = dt.datetime.now()
+
         for item in self.records:
             if item.date.date() == now_date.date():
                 stats = stats + item.amount
@@ -35,8 +36,8 @@ class CashCalculator(Calculator):
         super().__init__(limit)
         
 
-    USD_RATE = 76.94
-    EURO_RATE = 92.82
+    USD_RATE = 60.0
+    EURO_RATE = 70.0
     
 
     def get_today_cash_remained(self, currency):
@@ -82,28 +83,30 @@ class Record:
         if date:
             self.date = dt.datetime.strptime(date, '%d.%m.%Y')
         else: 
-             self.date = dt.datetime.now()
-
+            self.date = dt.datetime.now()
+            
 
 # для CashCalculator 
-r1 = Record(amount=200, comment="Безудержный шопинг", date="02.02.2021")
+r1 = Record(amount=100, comment="Безудержный шопинг", date="02.02.2021")
 r2 = Record(amount=1500, comment="Наполнение потребительской корзины", date="09.03.2019")
-r3 = Record(amount=600, comment="Катание на такси", date="29.01.2021")
-r4 = Record(amount=200, comment="К чаю", date="02.02.2021")
-r5 = Record(amount=300, comment="Транспорт", date="02.02.2021")
+r3 = Record(amount=900, comment="Катание на такси", date="29.01.2021")
+r4 = Record(amount=100, comment="К чаю", date="02.02.2021")
+r5 = Record(amount=50, comment="Транспорт", date="03.02.2021")
+r9 = Record(amount=50, comment="Транспорт")
 
 # для CaloriesCalculator
 r6 = Record(amount=1186, comment="Кусок тортика. И ещё один.", date="24.02.2019")
-r7 = Record(amount=84, comment="Йогурт.", date="23.02.2019")
-r8 = Record(amount=1140, comment="Баночка чипсов.", date="24.02.2019")
+r7 = Record(amount=84, comment="Йогурт.", date="01.02.2021")
+r8 = Record(amount=1140, comment="Баночка чипсов.", date="02.01.2021")
 
 cash_сalculator = CashCalculator(1000)
-calories_calculator = CaloriesCalculator(1150)
+calories_calculator = CaloriesCalculator(2500)
 cash_сalculator.add_record(r1)
 cash_сalculator.add_record(r2)
 cash_сalculator.add_record(r3)
 cash_сalculator.add_record(r4)
 cash_сalculator.add_record(r5)
+cash_сalculator.add_record(r9)
 calories_calculator.add_record(r6)
 calories_calculator.add_record(r7)
 calories_calculator.add_record(r8)
